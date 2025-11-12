@@ -25,6 +25,7 @@
         "bootstrap": "^5.3.8",
         "jquery": "^3.7.1",
         "sass": "^1.94.0",
+        "vue-router": "^4.6.3",
         "ziggy-js": "^2.6.0"
     }
 }

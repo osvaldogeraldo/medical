@@ -1,51 +1,105 @@
-import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/vue3'
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { ZiggyVue } from '../../vendor/tightenco/ziggy'
+// ----------------------------
+// CSS GLOBAIS E DE BIBLIOTECAS
+// ----------------------------
+import "bootstrap/dist/css/bootstrap.min.css"; // se quiser manter o grid do bootstrap
+import "primeflex/primeflex.css";
+import "primeicons/primeicons.css";
 
-// =========================
-// FontAwesome Configuration
-// =========================
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// ----------------------------
+// VUE, INERTIA E ZIGGY
+// ----------------------------
+import { createInertiaApp } from "@inertiajs/vue3";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { createApp, h } from "vue";
+import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
-// Ícones (adicione ou remova conforme necessário)
-import {
-    faBars, faChevronLeft, faChevronRight, faChevronDown, faSearch,
-    faHome, faUserMd, faTachometerAlt, faList, faUserPlus, faHeartbeat,
-    faCalendarCheck, faBuilding, faUserNurse, faWallet, faChartLine,
-    faUser, faCog, faQuestionCircle, faSignOutAlt, faUserCheck, faDatabase, faBell, faEnvelope
-} from '@fortawesome/free-solid-svg-icons'
+// ----------------------------
+// PRIMEVUE CONFIGURAÇÃO
+// ----------------------------
+import PrimeVue from "primevue/config";
+import ToastService from "primevue/toastservice";
+import DialogService from "primevue/dialogservice";
+import ConfirmationService from "primevue/confirmationservice";
 
-// Registrar ícones na biblioteca global
-library.add(
-    faBars, faChevronLeft, faChevronRight, faChevronDown, faSearch,
-    faHome, faUserMd, faTachometerAlt, faList, faUserPlus, faHeartbeat,
-    faCalendarCheck, faBuilding, faUserNurse, faWallet, faChartLine,
-    faUser, faCog, faQuestionCircle, faSignOutAlt, faUserCheck, faDatabase, faBell, faEnvelope
-)
+// Tema moderno (novo sistema de temas)
+import Aura from "@primeuix/themes/aura";
+import { definePreset } from "@primeuix/themes";
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
+// Define um preset customizado baseado em "Aura"
+const MyPreset = definePreset(Aura, {
+    semantic: {
+        primary: {
+            50: "{indigo.50}",
+            100: "{indigo.100}",
+            200: "{indigo.200}",
+            300: "{indigo.300}",
+            400: "{indigo.400}",
+            500: "{indigo.500}",
+            600: "{indigo.600}",
+            700: "{indigo.700}",
+            800: "{indigo.800}",
+            900: "{indigo.900}",
+            950: "{indigo.950}",
+        },
+    },
+});
 
-// =========================
-// Inertia App Bootstrap
-// =========================
+// ----------------------------
+// COMPONENTES PRIMEVUE GLOBAIS
+// ----------------------------
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import Dialog from "primevue/dialog";
+import Toast from "primevue/toast";
+import FileUpload from "primevue/fileupload";
+import ConfirmDialog from "primevue/confirmdialog";
+
+// ----------------------------
+// APP CONFIGURAÇÃO
+// ----------------------------
+const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
-        resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+        resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob("./Pages/**/*.vue")
+        ),
     setup({ el, App, props, plugin }) {
-        const vueApp = createApp({ render: () => h(App, props) })
-        vueApp.use(plugin)
-        vueApp.use(ZiggyVue)
+        const vueApp = createApp({ render: () => h(App, props) });
 
-        // Registrar componente global do FontAwesome
-        vueApp.component('font-awesome-icon', FontAwesomeIcon)
+        vueApp.use(plugin);
+        vueApp.use(ZiggyVue);
+        vueApp.use(ToastService);
+        vueApp.use(DialogService);
+        vueApp.use(ConfirmationService);
+        vueApp.use(PrimeVue, {
+            ripple: true,
+            theme: {
+                preset: MyPreset,
+                options: {
+                    darkModeSelector: ".dark-mode", // caso use modo escuro
+                },
+            },
+        });
 
-        vueApp.mount(el)
-        return vueApp
+        // Registrar componentes globais PrimeVue
+        vueApp.component("Button", Button);
+        vueApp.component("InputText", InputText);
+        vueApp.component("DataTable", DataTable);
+        vueApp.component("Column", Column);
+        vueApp.component("Dialog", Dialog);
+        vueApp.component("Toast", Toast);
+        vueApp.component("FileUpload", FileUpload);
+        vueApp.component("ConfirmDialog", ConfirmDialog);
+
+        vueApp.mount(el);
+        return vueApp;
     },
     progress: {
-        color: '#4B5563',
+        color: "#4B5563",
     },
-})
+});

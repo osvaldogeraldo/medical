@@ -1,7 +1,18 @@
 <template>
-    <button
-        class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-    >
-        <slot />
-    </button>
+  <button
+    class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12 mt-32"
+    :disabled="processing"
+  >
+    <span v-if="processing">
+      <span class="spinner-border spinner-border-sm text-white" role="status" aria-hidden="true"></span>
+      <span class="ms-2 text-white">Processando...</span>
+    </span>
+    <slot v-else />
+  </button>
 </template>
+
+<script setup>
+defineProps({
+  processing: Boolean
+});
+</script>

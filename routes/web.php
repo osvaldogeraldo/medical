@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MedicamentoController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -18,13 +17,31 @@ Route::get('/', function () {
     ]);
 });
 
-// Rotas que precisam de autenticação
+// Rotas protegidas por autenticação
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Categorias
+    Route::prefix('categories')->name('categories.')->controller(CategoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/search', 'index')->name('search'); // Pode usar mesma action
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{uuid}/edit', 'edit')->name('edit');
+        Route::put('/{uuid}', 'update')->name('update');
+        Route::delete('/{uuid}', 'destroy')->name('destroy');
+        Route::post('/restore/{uuid}', 'restore')->name('restore');
+        Route::post('/toggle/{uuid}', 'toggle')->name('toggle');
+        Route::post('/bulk-delete', 'bulkDelete')->name('bulk-delete');
+        Route::post('/import', 'importExcel')->name('import');
+    });
 
 });
 

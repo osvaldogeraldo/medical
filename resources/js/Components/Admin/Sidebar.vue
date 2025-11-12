@@ -12,8 +12,8 @@
                 </div>
             </div>
             <div class="profile-info">
-                <h5 class="profile-name">Nick Gonzalez</h5>
-                <span class="profile-role">Dept Admin</span>
+                <h5 class="profile-name">{{ $page.props.auth.user.name }}</h5>
+                <span class="profile-role">{{ $page.props.auth.user.roles[0] }}</span>
             </div>
         </div>
 
@@ -21,8 +21,17 @@
         <nav class="sidebar-nav">
             <ul class="nav-menu">
                 <li v-for="item in menuItems" :key="item.label" class="nav-item">
-                    <a :href="item.link" class="nav-link" :class="{ 'active': activeRoute === item.link }"
-                        @click.prevent="handleNavigation(item)">
+                    <Link v-if="item.route" :href="route(item.route)" class="nav-link" :class="{ 'active': isActive(item) }">
+                        <span class="nav-icon">
+                            <font-awesome-icon :icon="item.icon" />
+                        </span>
+                        <span class="nav-label" v-if="isOpen">{{ item.label }}</span>
+                        <span v-if="item.children && isOpen" class="nav-arrow" :class="{ 'rotated': item.expanded }">
+                            <font-awesome-icon :icon="['fas', 'chevron-down']" />
+                        </span>
+                    </Link>
+                    <a v-else :href="item.link" class="nav-link" :class="{ 'active': isActive(item) }"
+                       @click.prevent="handleNavigation(item)">
                         <span class="nav-icon">
                             <font-awesome-icon :icon="item.icon" />
                         </span>
@@ -31,12 +40,20 @@
                             <font-awesome-icon :icon="['fas', 'chevron-down']" />
                         </span>
                     </a>
+
                     <!-- Submenu -->
                     <transition name="slide-down">
                         <ul v-if="item.children && item.expanded && isOpen" class="submenu">
                             <li v-for="child in item.children" :key="child.label">
-                                <a :href="child.link" class="submenu-link"
-                                    :class="{ 'active': activeRoute === child.link }"
+                                <Link v-if="child.route" :href="route(child.route)" class="submenu-link"
+                                    :class="{ 'active': isChildActive(child) }">
+                                    <span class="submenu-icon">
+                                        <font-awesome-icon :icon="child.icon" />
+                                    </span>
+                                    <span class="submenu-label">{{ child.label }}</span>
+                                </Link>
+                                <a v-else :href="child.link" class="submenu-link"
+                                    :class="{ 'active': isChildActive(child) }"
                                     @click.prevent="handleNavigation(child)">
                                     <span class="submenu-icon">
                                         <font-awesome-icon :icon="child.icon" />
@@ -53,10 +70,14 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { Link, router } from '@inertiajs/vue3'
 
 export default {
     name: 'AppSidebar',
+    components: {
+        Link
+    },
     props: {
         isOpen: {
             type: Boolean,
@@ -65,14 +86,25 @@ export default {
     },
     emits: ['toggle', 'navigate'],
     setup(props, { emit }) {
-        const activeRoute = ref('/admin/dashboard')
+        const currentRouteName = ref(route().current())
 
         const menuItems = reactive([
             {
                 label: 'Dashboard',
-                link: '/admin/dashboard',
+                route: 'dashboard',
                 icon: ['fas', 'home'],
                 expanded: false
+            },
+            {
+                label: 'Categorias',
+                link: '#',
+                icon: ['fas', 'tags'],
+                expanded: false,
+                children: [
+                    { label: 'Listar Categorias', route: 'categories.index', icon: ['fas', 'list'] },
+                    { label: 'Adicionar Categoria', route: 'categories.create', icon: ['fas', 'plus'] },
+                    { label: 'Importar Categorias', route: 'categories.import', icon: ['fas', 'file-import'] }
+                ]
             },
             {
                 label: 'Doctors',
@@ -80,9 +112,9 @@ export default {
                 icon: ['fas', 'user-md'],
                 expanded: false,
                 children: [
-                    { label: 'Doctors Dashboard', link: '/admin/doctors/dashboard', icon: ['fas', 'tachometer-alt'] },
-                    { label: 'Doctors List', link: '/admin/doctors', icon: ['fas', 'list'] },
-                    { label: 'Add Doctor', link: '/admin/doctors/create', icon: ['fas', 'user-plus'] }
+                    { label: 'Doctors Dashboard', link: '#', icon: ['fas', 'tachometer-alt'] },
+                    { label: 'Doctors List', link: '#', icon: ['fas', 'list'] },
+                    { label: 'Add Doctor', link: '#', icon: ['fas', 'user-plus'] }
                 ]
             },
             {
@@ -91,79 +123,132 @@ export default {
                 icon: ['fas', 'heartbeat'],
                 expanded: false,
                 children: [
-                    { label: 'Patients Dashboard', link: '/admin/patients/dashboard', icon: ['fas', 'tachometer-alt'] },
-                    { label: 'Patients List', link: '/admin/patients', icon: ['fas', 'list'] },
-                    { label: 'Add Patient', link: '/admin/patients/create', icon: ['fas', 'user-plus'] }
+                    { label: 'Patients Dashboard', link: '#', icon: ['fas', 'tachometer-alt'] },
+                    { label: 'Patients List', link: '#', icon: ['fas', 'list'] },
+                    { label: 'Add Patient', link: '#', icon: ['fas', 'user-plus'] }
                 ]
             },
             {
                 label: 'Appointments',
-                link: '/admin/appointments',
+                link: '#',
                 icon: ['fas', 'calendar-check'],
                 expanded: false
             },
             {
                 label: 'Departments',
-                link: '/admin/departments',
+                link: '#',
                 icon: ['fas', 'building'],
                 expanded: false
             },
             {
                 label: 'Staff',
-                link: '/admin/staff',
+                link: '#',
                 icon: ['fas', 'user-nurse'],
                 expanded: false
             },
             {
                 label: 'Accounts',
-                link: '/admin/accounts',
+                link: '#',
                 icon: ['fas', 'wallet'],
                 expanded: false
             },
             {
                 label: 'Reports',
-                link: '/admin/reports',
+                link: '#',
                 icon: ['fas', 'chart-line'],
                 expanded: false
             }
         ])
 
-        const userInitials = 'NG'
+        // Computed para as iniciais do usuário
+        const userInitials = computed(() => {
+            const name = window?.$page?.props?.auth?.user?.name || 'NG'
+            return name
+                .split(' ')
+                .map(part => part.charAt(0))
+                .join('')
+                .toUpperCase()
+                .substring(0, 2)
+        })
+
+        const isActive = (item) => {
+            if (item.children) {
+                // Para menus com children, verifica se algum filho está ativo
+                return item.children.some(child => isChildActive(child))
+            }
+            if (item.route) {
+                return route().current() === item.route
+            }
+            return false
+        }
+
+        const isChildActive = (child) => {
+            if (child.route) {
+                return route().current() === child.route
+            }
+            return false
+        }
 
         const handleNavigation = (item) => {
-            if (item.children) {
-                // Toggle submenu
-                item.expanded = !item.expanded
-            } else {
-                // Navigate to page
-                activeRoute.value = item.link
-                emit('navigate', item.link)
+            console.log('Navigation clicked:', item)
 
-                // Close all other expanded menus
+            if (item.children) {
+                // Toggle submenu apenas para itens com children
+                item.expanded = !item.expanded
+                console.log('Toggled submenu for:', item.label, 'expanded:', item.expanded)
+            } else if (item.route) {
+                // Navega usando Inertia apenas se tiver uma rota definida
+                console.log('Navigating to route:', item.route)
+                router.visit(route(item.route))
+
+                // Atualiza a rota atual
+                currentRouteName.value = route().current()
+
+                // Fecha todos os outros menus expandidos
                 menuItems.forEach(menuItem => {
-                    if (menuItem.label !== item.label) {
+                    if (menuItem.label !== item.label && menuItem.children) {
                         menuItem.expanded = false
                     }
                 })
+            } else {
+                console.log('No route defined for:', item.label)
             }
         }
 
-        // Set initial active route based on current URL
+        // Define o menu ativo baseado na rota atual
         onMounted(() => {
-            const currentPath = window.location.pathname
-            activeRoute.value = currentPath
+            currentRouteName.value = route().current()
+            console.log('Current route:', currentRouteName.value)
+
+            // Expande o menu pai se algum filho estiver ativo
+            menuItems.forEach(item => {
+                if (item.children) {
+                    item.expanded = item.children.some(child => {
+                        if (child.route) {
+                            const isActive = route().current() === child.route
+                            if (isActive) {
+                                console.log('Auto-expanding menu for active child:', child.route)
+                            }
+                            return isActive
+                        }
+                        return false
+                    })
+                }
+            })
         })
 
         return {
             menuItems,
-            activeRoute,
+            currentRouteName,
             userInitials,
-            handleNavigation
+            isActive,
+            isChildActive,
+            handleNavigation,
+            route
         }
     }
 }
 </script>
-
 <style scoped>
 .sidebar {
     position: fixed;

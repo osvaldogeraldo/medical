@@ -8,7 +8,7 @@
                 </button>
 
                 <div class="header-brand">
-                    <h1 class="brand-text">Medflex</h1>
+                    <h1 class="brand-text">{{ $page.props.app.name }}</h1>
                 </div>
             </div>
 
@@ -78,24 +78,34 @@
 
                 <!-- User Menu -->
                 <div class="header-action user-menu">
+                    <!-- ░░ Botão do Usuário ░░ -->
                     <button class="user-btn" @click="toggleUserMenu">
                         <div class="user-avatar">
-                            <!-- <img src="/api/placeholder/32/32" alt="User"> -->
+                            <img v-if="$page.props.auth.user.avatar" :src="$page.props.auth.user.avatar"
+                                :alt="$page.props.auth.user.name" />
+                            <font-awesome-icon v-else :icon="['fas', 'user-circle']" class="text-gray-400 text-xl" />
                         </div>
-                        <span class="user-name">Osvaldo G.</span>
+
+                        <span class="user-name">{{ $page.props.auth.user.name }}</span>
                         <font-awesome-icon :icon="['fas', 'chevron-down']" class="user-arrow" />
                     </button>
 
+                    <!-- ░░ Dropdown do Usuário ░░ -->
                     <div v-if="showUserMenu" class="dropdown-panel user-panel">
                         <div class="user-info">
                             <div class="user-avatar-large">
-                                <!-- <img src="/api/placeholder/48/48" alt="User"> -->
+                                <img v-if="$page.props.auth.user.avatar" :src="$page.props.auth.user.avatar"
+                                    :alt="$page.props.auth.user.name" />
+                                <font-awesome-icon v-else :icon="['fas', 'user-circle']"
+                                    class="text-gray-400 text-3xl" />
                             </div>
+
                             <div class="user-details">
-                                <h4>Osvaldo Gonzalez</h4>
-                                <span class="user-role">Administrator</span>
+                                <h4>{{ $page.props.auth.user.username }}</h4>
+                                <span class="user-role">{{ $page.props.auth.user.roles[0] }}</span>
                             </div>
                         </div>
+
                         <div class="dropdown-menu">
                             <a href="#" class="menu-item">
                                 <font-awesome-icon :icon="['fas', 'user']" />
@@ -109,7 +119,9 @@
                                 <font-awesome-icon :icon="['fas', 'question-circle']" />
                                 <span>Help & Support</span>
                             </a>
+
                             <div class="menu-divider"></div>
+
                             <a href="#" class="menu-item text-danger" @click="logout">
                                 <font-awesome-icon :icon="['fas', 'sign-out-alt']" />
                                 <span>Logout</span>
@@ -117,6 +129,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </header>

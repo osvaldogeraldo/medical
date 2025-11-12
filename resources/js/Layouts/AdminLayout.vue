@@ -35,14 +35,6 @@ const toggleSidebar = () => {
 
         <AppFooter />
     </div>
-
-    <!-- Flash messages -->
-    <div v-if="flash.success" class="alert alert-success fixed-top m-4">
-        {{ flash.success }}
-    </div>
-    <div v-if="flash.error" class="alert alert-danger fixed-top m-4">
-        {{ flash.error }}
-    </div>
 </template>
 <style scoped>
 .app-wrapper {

@@ -394,4 +394,28 @@ export default {
 .sidebar::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+
+/* No CSS da sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        z-index: 1000;
+    }
+
+    .sidebar-open {
+        transform: translateX(0);
+    }
+
+    /* Overlay para quando sidebar está aberta em mobile */
+    .sidebar-open::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 240px;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+}
 </style>

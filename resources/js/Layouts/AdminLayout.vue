@@ -44,3 +44,45 @@ const toggleSidebar = () => {
         {{ flash.error }}
     </div>
 </template>
+<style scoped>
+.app-wrapper {
+    min-height: 100vh;
+    background: #f8fafc;
+}
+
+.main-container {
+    display: flex;
+    min-height: calc(100vh - 64px);
+    margin-top: 64px;
+}
+
+.main-content {
+    flex: 1;
+    margin-left: 240px;
+    padding: 24px;
+    transition: margin-left 0.3s ease;
+    background: #f8fafc;
+    min-height: calc(100vh - 64px);
+}
+
+.main-content.sidebar-collapsed {
+    margin-left: 64px;
+}
+
+.content-wrapper {
+    max-width: 100%;
+    height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0 !important;
+        padding: 16px;
+    }
+
+    .main-content.sidebar-collapsed {
+        margin-left: 0 !important;
+    }
+}
+</style>

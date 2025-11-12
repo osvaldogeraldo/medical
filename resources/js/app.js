@@ -1,78 +1,27 @@
-// ==========================
-// Imports principais
-// ==========================
-import './bootstrap';
 import '../css/app.css';
+import './bootstrap';
 
-import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { InertiaProgress } from '@inertiajs/progress';
-import { route } from 'ziggy-js';
+import { createApp, h } from 'vue';
+import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 
-// ==========================
-// Font Awesome
-// ==========================
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Ícones que você vai usar
-import {
-  faHome,
-  faUserDoctor,
-  faHeartPulse,
-  faCalendarCheck,
-  faBuilding,
-  faUserNurse,
-  faWallet,
-  faChartLine,
-  faBars,
-  faEnvelope,
-  faBell,
-} from '@fortawesome/free-solid-svg-icons';
-
-// Adicionar à biblioteca
-library.add(
-  faHome,
-  faUserDoctor,
-  faHeartPulse,
-  faCalendarCheck,
-  faBuilding,
-  faUserNurse,
-  faWallet,
-  faChartLine,
-  faBars,
-  faEnvelope,
-  faBell
-);
-
-// ==========================
-// Inertia Progress Bar
-// ==========================
-InertiaProgress.init({
-    color: '#4B9CE2',
-    showSpinner: false,
-});
-
-// ==========================
-// Inicializa o Inertia App
-// ==========================
 createInertiaApp({
-    resolve: name =>
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue')
+            import.meta.glob('./Pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        const vueApp = createApp({ render: () => h(App, props) })
+        return createApp({ render: () => h(App, props) })
             .use(plugin)
-            // Registrar FontAwesome globalmente
-            .component('font-awesome-icon', FontAwesomeIcon);
-
-        // Ziggy global
-        vueApp.config.globalProperties.$route = (name, params, absolute) =>
-            route(name, params, absolute, window.Ziggy);
-
-        return vueApp.mount(el);
+            .use(ZiggyVue)
+            .mount(el);
+    },
+    progress: {
+        color: '#4B5563',
     },
 });

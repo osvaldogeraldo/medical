@@ -1,30 +1,21 @@
 <!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {{-- Favicon --}}
-    <link rel="icon" href="/template/images/favicon.svg" type="image/svg+xml">
+        <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-    {{-- Template CSS --}}
-    <link rel="stylesheet" href="/template/css/main.min.css">
-    <link rel="stylesheet" href="/template/vendor/overlay-scroll/OverlayScrollbars.min.css">
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    {{-- Vite --}}
-    @vite('resources/js/app.js')
-
-    {{-- Inertia --}}
-    @inertiaHead
-</head>
-<body>
-    @inertia
-
-    {{-- Template JS --}}
-    <script src="/template/js/jquery.min.html"></script>
-    <script src="/template/js/bootstrap.bundle.min.html"></script>
-    <script src="/template/js/custom.html"></script>
-    <script src="/template/js/moment.min.html"></script>
-    <script src="/template/js/table-random-colors.html"></script>
-</body>
+        <!-- Scripts -->
+        @routes
+        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+        @inertiaHead
+    </head>
+    <body class="font-sans antialiased">
+        @inertia
+    </body>
 </html>

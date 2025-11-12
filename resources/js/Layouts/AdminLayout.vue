@@ -1,102 +1,46 @@
-<template>
-    <div class="app-wrapper">
-        <!-- Header -->
-        <AppHeader @toggle-sidebar="toggleSidebar" />
-
-        <!-- Main Container -->
-        <div class="main-container">
-            <!-- Sidebar -->
-            <AppSidebar :is-open="sidebarOpen" @toggle="toggleSidebar" />
-
-            <main class="main-content">
-                <slot />
-            </main>
-            <!-- Content + Footer -->
-
-        </div>
-        <AppFooter />
-    </div>
-</template>
-
-<script>
-import { ref, provide, onMounted } from 'vue'
+<script setup>
+import { ref, provide, computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import AppHeader from './../Components/Admin/Header.vue'
 import AppSidebar from './../Components/Admin/Sidebar.vue'
 import AppFooter from './../Components/Admin/Footer.vue'
 
-export default {
-    name: 'AppLayout',
-    components: { AppHeader, AppSidebar, AppFooter },
-    setup() {
-        const sidebarOpen = ref(true)
-        const currentPage = ref('/admin/dashboard')
+const page = usePage()
 
-        // Provide sidebar state para o footer
-        provide('sidebarExpanded', sidebarOpen)
+const sidebarOpen = ref(true)
 
-        // Toggle sidebar
-        const toggleSidebar = () => {
-            sidebarOpen.value = !sidebarOpen.value
-        }
+// Obter dados globais
+const authUser = computed(() => page.props.auth.user)
+const flash = computed(() => page.props.flash)
 
-        // Ajusta sidebar automaticamente em telas pequenas
-        const checkScreenSize = () => {
-            sidebarOpen.value = window.innerWidth > 768
-        }
+// Disponibiliza sidebar para os filhos
+provide('sidebarExpanded', sidebarOpen)
 
-        onMounted(() => {
-            checkScreenSize()
-            window.addEventListener('resize', checkScreenSize)
-        })
-
-        return { sidebarOpen, currentPage, toggleSidebar }
-    }
+const toggleSidebar = () => {
+    sidebarOpen.value = !sidebarOpen.value
 }
 </script>
 
-<style scoped>
-/* Wrapper principal */
-.app-wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: #f8f9fa;
-}
+<template>
+    <div class="app-wrapper">
+        <AppHeader :user="authUser" @toggle-sidebar="toggleSidebar" />
 
-/* Container principal */
-.main-container {
-    display: flex;
-    flex: 1;
-    min-height: calc(100vh - 64px);
-    /* considerando header */
-}
+        <div class="main-container">
+            <AppSidebar :user="authUser" :is-open="sidebarOpen" @toggle="toggleSidebar" />
 
-/* Content + Footer */
-.content-area {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    transition: margin-left 0.3s;
-    margin-left: 240px;
-    /* default sidebar expanded */
-}
+            <main class="main-content">
+                <slot />
+            </main>
+        </div>
 
-.content-area.sidebar-collapsed {
-    margin-left: 64px;
-    /* sidebar recolhida */
-}
+        <AppFooter />
+    </div>
 
-
-/* Main content */
-.main-content {
-    flex: 1;
-    padding: 20px;
-}
-
-/* Menor padding em mobile */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 12px;
-    }
-}
-</style>
+    <!-- Flash messages -->
+    <div v-if="flash.success" class="alert alert-success fixed-top m-4">
+        {{ flash.success }}
+    </div>
+    <div v-if="flash.error" class="alert alert-danger fixed-top m-4">
+        {{ flash.error }}
+    </div>
+</template>

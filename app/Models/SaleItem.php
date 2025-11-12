@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class SaleItem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'sale_id',
+        'medicine_id',
+        'quantity',
+        'unit_price',
+        'total_price',
+        'discount',
+        'batch_number',
+        'expiry_date'
+    ];
+
+    protected $casts = [
+        'unit_price' => 'decimal:2',
+        'total_price' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'expiry_date' => 'date'
+    ];
+
+    public function sale(): BelongsTo
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
+    public function medicine(): BelongsTo
+    {
+        return $this->belongsTo(Medicine::class);
+    }
+}

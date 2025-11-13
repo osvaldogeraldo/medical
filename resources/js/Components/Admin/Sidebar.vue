@@ -21,17 +21,18 @@
         <nav class="sidebar-nav">
             <ul class="nav-menu">
                 <li v-for="item in menuItems" :key="item.label" class="nav-item">
-                    <Link v-if="item.route" :href="route(item.route)" class="nav-link" :class="{ 'active': isActive(item) }">
-                        <span class="nav-icon">
-                            <font-awesome-icon :icon="item.icon" />
-                        </span>
-                        <span class="nav-label" v-if="isOpen">{{ item.label }}</span>
-                        <span v-if="item.children && isOpen" class="nav-arrow" :class="{ 'rotated': item.expanded }">
-                            <font-awesome-icon :icon="['fas', 'chevron-down']" />
-                        </span>
+                    <Link v-if="item.route" :href="route(item.route)" class="nav-link"
+                        :class="{ 'active': isActive(item) }">
+                    <span class="nav-icon">
+                        <font-awesome-icon :icon="item.icon" />
+                    </span>
+                    <span class="nav-label" v-if="isOpen">{{ item.label }}</span>
+                    <span v-if="item.children && isOpen" class="nav-arrow" :class="{ 'rotated': item.expanded }">
+                        <font-awesome-icon :icon="['fas', 'chevron-down']" />
+                    </span>
                     </Link>
                     <a v-else :href="item.link" class="nav-link" :class="{ 'active': isActive(item) }"
-                       @click.prevent="handleNavigation(item)">
+                        @click.prevent="handleNavigation(item)">
                         <span class="nav-icon">
                             <font-awesome-icon :icon="item.icon" />
                         </span>
@@ -47,10 +48,10 @@
                             <li v-for="child in item.children" :key="child.label">
                                 <Link v-if="child.route" :href="route(child.route)" class="submenu-link"
                                     :class="{ 'active': isChildActive(child) }">
-                                    <span class="submenu-icon">
-                                        <font-awesome-icon :icon="child.icon" />
-                                    </span>
-                                    <span class="submenu-label">{{ child.label }}</span>
+                                <span class="submenu-icon">
+                                    <font-awesome-icon :icon="child.icon" />
+                                </span>
+                                <span class="submenu-label">{{ child.label }}</span>
                                 </Link>
                                 <a v-else :href="child.link" class="submenu-link"
                                     :class="{ 'active': isChildActive(child) }"
@@ -92,70 +93,70 @@ export default {
             {
                 label: 'Dashboard',
                 route: 'dashboard',
-                icon: ['fas', 'home'],
+                icon: 'pi pi-home',
                 expanded: false
             },
             {
                 label: 'Categorias',
                 link: '#',
-                icon: ['fas', 'tags'],
+                icon: 'pi pi-tags',
                 expanded: false,
                 children: [
-                    { label: 'Listar Categorias', route: 'categories.index', icon: ['fas', 'list'] },
-                    { label: 'Adicionar Categoria', route: 'categories.create', icon: ['fas', 'plus'] },
-                    { label: 'Importar Categorias', route: 'categories.import', icon: ['fas', 'file-import'] }
+                    { label: 'Listar Categorias', route: 'categories.index', icon: 'pi pi-list' },
+                    { label: 'Adicionar Categoria', route: 'categories.create', icon: 'pi pi-plus' },
+                    { label: 'Importar Categorias', route: 'categories.import', icon: 'pi pi-upload' }
                 ]
             },
             {
                 label: 'Doctors',
                 link: '#',
-                icon: ['fas', 'user-md'],
+                icon: 'pi pi-user',
                 expanded: false,
                 children: [
-                    { label: 'Doctors Dashboard', link: '#', icon: ['fas', 'tachometer-alt'] },
-                    { label: 'Doctors List', link: '#', icon: ['fas', 'list'] },
-                    { label: 'Add Doctor', link: '#', icon: ['fas', 'user-plus'] }
+                    { label: 'Doctors Dashboard', link: '#', icon: 'pi pi-chart-line' },
+                    { label: 'Doctors List', link: '#', icon: 'pi pi-list' },
+                    { label: 'Add Doctor', link: '#', icon: 'pi pi-plus' }
                 ]
             },
             {
                 label: 'Patients',
                 link: '#',
-                icon: ['fas', 'heartbeat'],
+                icon: 'pi pi-heart',
                 expanded: false,
                 children: [
-                    { label: 'Patients Dashboard', link: '#', icon: ['fas', 'tachometer-alt'] },
-                    { label: 'Patients List', link: '#', icon: ['fas', 'list'] },
-                    { label: 'Add Patient', link: '#', icon: ['fas', 'user-plus'] }
+                    { label: 'Patients Dashboard', link: '#', icon: 'pi pi-chart-line' },
+                    { label: 'Patients List', link: '#', icon: 'pi pi-list' },
+                    { label: 'Add Patient', link: '#', icon: 'pi pi-plus' }
                 ]
             },
             {
                 label: 'Appointments',
                 link: '#',
-                icon: ['fas', 'calendar-check'],
+                icon: 'pi pi-calendar',
                 expanded: false
             },
             {
                 label: 'Departments',
                 link: '#',
-                icon: ['fas', 'building'],
+                icon: 'pi pi-building',
                 expanded: false
             },
             {
                 label: 'Staff',
                 link: '#',
-                icon: ['fas', 'user-nurse'],
+                icon: 'pi pi-users',
                 expanded: false
             },
             {
                 label: 'Accounts',
                 link: '#',
-                icon: ['fas', 'wallet'],
+                icon: 'pi pi-wallet',
                 expanded: false
             },
             {
                 label: 'Reports',
                 link: '#',
-                icon: ['fas', 'chart-line'],
+                icon: 'pi pi-chart-bar',
                 expanded: false
             }
         ])

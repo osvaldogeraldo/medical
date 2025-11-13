@@ -1,12 +1,12 @@
 <?php
 
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Welcome / Landing page
 Route::get('/', function () {
@@ -48,7 +48,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('medicines')->as('medicines.')->controller(MedicineController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::get('/{uuid}', 'details')->name('details');
+        Route::get('/{uuid}/edit', 'edit')->name('edit');
+        Route::get('/{uuid}', 'show')->name('show'); // Para view mode
         Route::post('/', 'store')->name('store');
         Route::put('/{uuid}', 'update')->name('update');
         Route::delete('/{uuid}', 'destroy')->name('destroy');
@@ -57,8 +58,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/bulk-delete', 'bulkDelete')->name('bulkDelete');
         Route::post('/import-excel', 'importExcel')->name('importExcel');
         Route::get('/template', 'template')->name('template');
+        // Rotas para remover anexos e imagens
+        Route::delete('/{uuid}/attachments/{attachmentId}', 'removeAttachment')->name('removeAttachment');
+        Route::delete('/{uuid}/images/{imageIndex}', 'removeImage')->name('removeImage');
     });
 });
 
 // Auth routes (Breeze)
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

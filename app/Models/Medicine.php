@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,6 +40,25 @@ class Medicine extends Model
         'requires_prescription' => 'boolean',
         'is_active' => 'boolean'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                do {
+                    $uuid = Str::random(128);
+                } while (self::where('uuid', $uuid)->exists());
+                $model->uuid = $uuid;
+            }
+        });
+    }
+
+    public function attachments()
+    {
+        return $this->morphMany(Attachment::class, 'attachable');
+    }
 
     public function category(): BelongsTo
     {

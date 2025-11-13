@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('medicines', function (Blueprint $table) {
             $table->id();
+            $table->string('uuid', 128)->unique();
             $table->string('name');
             $table->string('generic_name')->nullable();
             $table->string('brand')->nullable();
@@ -27,7 +28,7 @@ return new class extends Migration
             $table->boolean('requires_prescription')->default(false);
             $table->boolean('is_active')->default(true);
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('supplier_id')->constrained()->onDelete('cascade');
+            $table->foreignId('supplier_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

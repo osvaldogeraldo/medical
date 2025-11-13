@@ -6,12 +6,9 @@
             <div class="p-6 space-y-6">
 
                 <!-- Header -->
-                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-2">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-800">Gestão de Categorias</h1>
-                        <p class="text-gray-600">Gerencie todas as categorias do sistema</p>
-                    </div>
-                </div>
+                  <div class="card-header">
+                    <h2 class="text-2xl font-semibold"><i>Categorias</i></h2>
+                 </div>
 
                 <!-- Tabs -->
                 <TabView v-model:activeIndex="activeTab">
@@ -99,7 +96,7 @@
                             <!-- Dropzone -->
                             <div class="border-2 border-dashed border-gray-300 rounded-xl p-10 text-center bg-gray-50 hover:bg-gray-100 transition cursor-pointer"
                                 @drop.prevent="handleDrop" @dragover.prevent @click="$refs.fileInput.click()">
-                                <i class="pi pi-upload text-4xl text-gray-500"></i>
+                                <i class="pi pi-upload text-4xl text-gray-500 mt-4"></i>
                                 <p class="text-gray-600 mt-3">
                                     Arraste e solte o arquivo Excel aqui ou clique para selecionar
                                 </p>
@@ -205,7 +202,6 @@ import Toast from 'primevue/toast';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
-import Checkbox from 'primevue/checkbox';
 import Tag from 'primevue/tag';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';

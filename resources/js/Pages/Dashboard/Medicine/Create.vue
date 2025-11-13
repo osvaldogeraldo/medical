@@ -505,6 +505,18 @@
                             <button type="button" class="btn btn-outline-danger px-3" @click="goBack">
                                 Cancelar
                             </button>
+
+                            <button
+    v-if="isEdit"
+    type="button"
+    class="btn btn-primary px-3 d-flex align-items-center gap-2"
+    :disabled="loading"
+    @click="submitForm"
+>
+    <i class="pi pi-check"></i>
+    <span>Actualizar</span>
+</button>
+
                         </div>
                     </div>
                 </div>

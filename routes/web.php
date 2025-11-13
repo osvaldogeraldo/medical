@@ -41,9 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/toggle/{uuid}', 'toggle')->name('toggle');
         Route::post('/bulk-delete', 'bulkDelete')->name('bulk-delete');
         Route::post('/import', 'importExcel')->name('import');
+        Route::get('/template', 'template')->name('template');
     });
-
 });
 
 // Auth routes (Breeze)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

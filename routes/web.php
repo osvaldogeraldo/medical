@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MedicineController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AttachmentController;
 
 // Welcome / Landing page
 Route::get('/', function () {
@@ -62,7 +63,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/import-excel', 'importExcel')->name('import');
         Route::delete('/{uuid}/images/{imageIndex}', 'removeImage')->name('removeImage');
     });
+
+    Route::controller(AttachmentController::class)->name('attachments.')->group(function () {
+        Route::prefix('medicines/{medicine}/attachments')->group(function () {
+            Route::get('/', 'index')->name('index'); // Listar anexos
+            Route::post('/', 'store')->name('store'); // Criar anexo
+            Route::post('/{attachment_uuid}/update', 'update')->name('update'); // Atualizar anexo
+            Route::get('{attachment}/download', 'download')->name('download'); // Baixar anexo
+            Route::delete('{attachment}', 'destroy')->name('destroy'); // Deletar anexo
+        });
+    });
 });
 
 // Auth routes (Breeze)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

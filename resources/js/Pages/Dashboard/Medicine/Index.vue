@@ -149,7 +149,10 @@ const detailsMedicine = ref(null)
 
 const goToCreate = () => router.get(route('medicines.create'))
 const goToEdit = (uuid) => router.get(route('medicines.edit', uuid))
-const goToAttachments = (uuid) => router.get(route('medicines.attachments', uuid))
+const goToAttachments = (uuid) => {
+    router.get(route('attachments.index', { medicine: uuid }))
+}
+
 
 const openDetailsModal = (medicine) => {
     detailsMedicine.value = medicine

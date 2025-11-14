@@ -6,9 +6,9 @@
             <div class="p-6 space-y-6">
                 <!-- Cards de Estatísticas -->
                 <!-- Implementar no futuro -->
-                 <div class="card-header">
+                <div class="card-header">
                     <h2 class="text-2xl font-semibold"><i>Medicamentos</i></h2>
-                 </div>
+                </div>
                 <!-- Filtros e Ações -->
                 <div
                     class="card p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 bg-gray-50 rounded-lg border mt-4">
@@ -117,6 +117,7 @@
 </template>
 
 <script setup>
+import axios from 'axios';
 import { ref, onUnmounted } from 'vue'
 import { router } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
@@ -172,22 +173,34 @@ const handleSearch = () => {
 
 const onFileChange = (e) => (file.value = e.target.files[0])
 const handleDrop = (e) => (file.value = e.dataTransfer.files[0])
+
 const enviarArquivo = async () => {
-    if (!file.value) return
-    carregando.value = true
-    const formData = new FormData()
-    formData.append('file', file.value)
+    if (!file.value) return;
+
+    carregando.value = true;
+    const formData = new FormData();
+    formData.append('file', file.value);
+
     try {
-        console.log("Cheguei aqui")
-        const { data } = await axios.post(route('medicines.importExcel'), formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-        resumo.value = data
-        router.reload({ only: ['medicines'] })
+        const { data } = await axios.post(route('medicines.import'), formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        resumo.value = data;        // resumo da importação
+        file.value = null;          // limpa arquivo após import
+        router.reload({ only: ['medicines'] });
     } catch (error) {
-        toast.value.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao importar arquivo.', life: 3000 })
+        console.error('Erro ao importar arquivo:', error);
+        toast.value.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: error.response?.data?.message || 'Falha ao importar arquivo.',
+            life: 3000,
+        });
     } finally {
-        carregando.value = false
+        carregando.value = false;
     }
-}
+};
 
 const baixarTemplate = () => {
     window.open(route('medicines.template'), '_blank');

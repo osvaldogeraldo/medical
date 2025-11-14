@@ -17,8 +17,9 @@
             <!-- Conteúdo principal -->
             <div v-if="isEdit || isView" class="bg-white rounded-lg shadow-sm p-6">
                 <!-- Modo Edit/Show - Formulário simples -->
+                <!-- Primeira linha -->
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-4">
                         <div class="space-y-4">
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Nome *</label>
@@ -26,13 +27,11 @@
                                     class="w-full" :class="{ 'p-invalid': errors.name }" />
                                 <small class="p-error" v-if="errors.name">{{ errors.name }}</small>
                             </div>
-
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Nome Genérico</label>
                                 <InputText v-model="form.generic_name" :disabled="isView" placeholder="Nome genérico"
                                     class="w-full" />
                             </div>
-
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Marca</label>
                                 <InputText v-model="form.brand" :disabled="isView" placeholder="Marca" class="w-full" />
@@ -40,7 +39,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-4">
                         <div class="space-y-4">
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">SKU *</label>
@@ -48,14 +47,12 @@
                                     :class="{ 'p-invalid': errors.sku }" />
                                 <small class="p-error" v-if="errors.sku">{{ errors.sku }}</small>
                             </div>
-
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Preço *</label>
                                 <InputNumber v-model="form.price" :disabled="isView" mode="currency" currency="MZN"
-                                    locale="pt-MZ" class="w-full" :class="{ 'p-invalid': errors.price }" />
+                                    locale="pt-pt" class="w-full" :class="{ 'p-invalid': errors.price }" />
                                 <small class="p-error" v-if="errors.price">{{ errors.price }}</small>
                             </div>
-
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Preço de Custo *</label>
                                 <InputNumber v-model="form.cost_price" :disabled="isView" mode="currency" currency="MZN"
@@ -65,7 +62,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-4">
                         <div class="space-y-4">
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Categoria *</label>
@@ -75,14 +72,12 @@
                                     filter-placeholder="Pesquisar categoria..." />
                                 <small class="p-error" v-if="errors.category_id">{{ errors.category_id }}</small>
                             </div>
-
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Fornecedor</label>
                                 <Dropdown v-model="form.supplier_id" :options="suppliers" option-label="name"
                                     option-value="id" :disabled="isView" placeholder="Selecione o fornecedor"
                                     class="w-full" :filter="true" filter-placeholder="Pesquisar fornecedor..." />
                             </div>
-
                             <div class="field">
                                 <label class="block text-sm font-medium mb-2">Quantidade em Stock *</label>
                                 <InputNumber v-model="form.stock_quantity" :disabled="isView" class="w-full"
@@ -93,46 +88,50 @@
                     </div>
                 </div>
 
-                <!-- Segunda linha de campos -->
+                <!-- Segunda linha -->
                 <div class="row mt-4">
-                    <div class="col-12 col-md-3">
+                    <div class="col-md-4">
                         <div class="field">
                             <label class="block text-sm font-medium mb-2">Stock Mínimo</label>
                             <InputNumber v-model="form.min_stock" :disabled="isView" class="w-full" />
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+
+                    <div class="col-md-4">
                         <div class="field">
                             <label class="block text-sm font-medium mb-2">Stock Máximo</label>
                             <InputNumber v-model="form.max_stock" :disabled="isView" class="w-full" />
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+
+                    <div class="col-md-4">
                         <div class="field">
                             <label class="block text-sm font-medium mb-2">Data de Validade</label>
                             <Calendar v-model="form.expiry_date" :disabled="isView" date-format="dd/mm/yy"
                                 class="w-full" />
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+                </div>
+
+                <!-- Terceira linha -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
                         <div class="field">
                             <label class="block text-sm font-medium mb-2">Número do Lote</label>
                             <InputText v-model="form.batch_number" :disabled="isView" placeholder="Número do lote"
                                 class="w-full" />
                         </div>
                     </div>
-                </div>
 
-                <!-- Terceira linha de campos -->
-                <div class="row mt-4">
-                    <div class="col-12 col-md-6">
+                    <div class="col-md-4">
                         <div class="field">
                             <label class="block text-sm font-medium mb-2">Forma Farmacêutica</label>
                             <InputText v-model="form.dosage_form" :disabled="isView"
                                 placeholder="Ex: Comprimido, Xarope, etc." class="w-full" />
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+
+                    <div class="col-md-4">
                         <div class="field">
                             <label class="block text-sm font-medium mb-2">Concentração</label>
                             <InputText v-model="form.strength" :disabled="isView" placeholder="Ex: 500mg, 10mg/ml, etc."
@@ -156,7 +155,7 @@
                 </div>
 
                 <!-- Descrição -->
-                <div class="field mt-4">
+                <div class="field">
                     <label class="block text-sm font-medium mb-2">Descrição</label>
                     <Textarea v-model="form.description" :disabled="isView" rows="3"
                         placeholder="Descrição do medicamento..." class="w-full" />
@@ -191,85 +190,87 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="p-stepper-panels">
                                 <!-- Step 1: Informações Básicas -->
                                 <div v-show="activeStep === 0" class="p-stepper-panel">
-                                    <div class="p-4 p-md-6 space-y-4">
-                                        <FormGroup>
-                                            <div class="row g-3">
-                                                <div class="col-12 col-md-6">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Nome *</label>
-                                                        <InputText v-model="form.name" placeholder="Nome do medicamento"
-                                                            class="w-full" :class="{ 'p-invalid': errors.name }" />
-                                                        <small class="p-error" v-if="errors.name">{{ errors.name
-                                                            }}</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-6">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Nome
-                                                            Genérico</label>
-                                                        <InputText v-model="form.generic_name"
-                                                            placeholder="Nome genérico" class="w-full" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-6">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Marca</label>
-                                                        <InputText v-model="form.brand" placeholder="Marca"
-                                                            class="w-full" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-6">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">SKU *</label>
-                                                        <InputText v-model="form.sku" placeholder="Código SKU"
-                                                            class="w-full" :class="{ 'p-invalid': errors.sku }" />
-                                                        <small class="p-error" v-if="errors.sku">{{ errors.sku
-                                                            }}</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-6">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Categoria
-                                                            *</label>
-                                                        <Dropdown v-model="form.category_id" :options="categories"
-                                                            optionLabel="name" optionValue="id"
-                                                            placeholder="Selecione a categoria" class="w-full"
-                                                            :class="{ 'p-invalid': errors.category_id }" :filter="true"
-                                                            filterPlaceholder="Pesquisar categoria..." />
-                                                        <small class="p-error" v-if="errors.category_id">{{
-                                                            errors.category_id
-                                                        }}</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-6">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Fornecedor</label>
-                                                        <Dropdown v-model="form.supplier_id" :options="suppliers"
-                                                            optionLabel="name" optionValue="id"
-                                                            placeholder="Selecione o fornecedor" class="w-full"
-                                                            :filter="true"
-                                                            filterPlaceholder="Pesquisar fornecedor..." />
-                                                    </div>
+                                    <div class="p-4 p-md-6">
+                                        <div class="row">
+                                            <!-- Categoria -->
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">
+                                                        Categoria <span class="text-danger">*</span>
+                                                    </label>
+                                                    <Dropdown v-model="form.category_id" :options="categories"
+                                                        optionLabel="name" optionValue="id"
+                                                        placeholder="Selecione a categoria" class="w-full"
+                                                        :class="{ 'p-invalid': errors.category_id }" :filter="true"
+                                                        filterPlaceholder="Pesquisar categoria..." />
+                                                    <small class="p-error" v-if="errors.category_id">{{
+                                                        errors.category_id }}</small>
                                                 </div>
                                             </div>
 
-                                            <div class="field mt-4">
+                                            <!-- Nome -->
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">
+                                                        Nome <span class="text-danger">*</span>
+                                                    </label>
+                                                    <InputText v-model="form.name" placeholder="Nome do medicamento"
+                                                        class="w-full" :class="{ 'p-invalid': errors.name }" />
+                                                    <small class="p-error" v-if="errors.name">{{ errors.name }}</small>
+                                                </div>
+                                            </div>
+
+                                            <!-- SKU -->
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">
+                                                        SKU <span class="text-danger">*</span>
+                                                    </label>
+                                                    <InputText v-model="form.sku" placeholder="Código SKU"
+                                                        class="w-full" :class="{ 'p-invalid': errors.sku }" />
+                                                    <small class="p-error" v-if="errors.sku">{{ errors.sku }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Nome Genérico</label>
+                                                    <InputText v-model="form.generic_name" placeholder="Nome genérico"
+                                                        class="w-full" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Marca</label>
+                                                    <InputText v-model="form.brand" placeholder="Marca"
+                                                        class="w-full" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium">Fornecedor</label>
+                                                    <Dropdown v-model="form.supplier_id" :options="suppliers"
+                                                        optionLabel="name" optionValue="id"
+                                                        placeholder="Selecione o fornecedor" class="w-full"
+                                                        :filter="true" filterPlaceholder="Pesquisar fornecedor..." />
+                                                </div>
+                                            </div>
+
+                                            <div class="field w-100">
                                                 <label class="block text-sm font-medium mb-2">Descrição</label>
                                                 <Textarea v-model="form.description" rows="3"
                                                     placeholder="Descrição do medicamento..." class="w-full" />
                                             </div>
-                                        </FormGroup>
-                                    </div>
+                                        </div>
 
+                                    </div>
                                     <div class="flex justify-end p-4 p-md-6 border-top">
                                         <Button label="Próximo" icon="pi pi-arrow-right" iconPos="right"
                                             @click="goToNextStep" />
@@ -279,66 +280,61 @@
                                 <!-- Step 2: Preços e Stock -->
                                 <div v-show="activeStep === 1" class="p-stepper-panel">
                                     <div class="p-4 p-md-6 space-y-4">
-                                        <FormGroup>
-                                            <div class="row g-3">
-                                                <div class="col-12 col-md-4">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Preço *</label>
-                                                        <InputNumber v-model="form.price" mode="currency" currency="MZN"
-                                                            locale="pt-MZ" class="w-full"
-                                                            :class="{ 'p-invalid': errors.price }" />
-                                                        <small class="p-error" v-if="errors.price">{{ errors.price
-                                                        }}</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Preço de Custo
-                                                            *</label>
-                                                        <InputNumber v-model="form.cost_price" mode="currency"
-                                                            currency="MZN" locale="pt-MZ" class="w-full"
-                                                            :class="{ 'p-invalid': errors.cost_price }" />
-                                                        <small class="p-error" v-if="errors.cost_price">{{
-                                                            errors.cost_price
-                                                            }}</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Quantidade em
-                                                            Stock
-                                                            *</label>
-                                                        <InputNumber v-model="form.stock_quantity" class="w-full"
-                                                            :class="{ 'p-invalid': errors.stock_quantity }" :min="0"
-                                                            showButtons buttonLayout="horizontal"
-                                                            incrementButtonIcon="pi pi-plus"
-                                                            decrementButtonIcon="pi pi-minus" :step="1" />
-                                                        <small class="p-error" v-if="errors.stock_quantity">{{
-                                                            errors.stock_quantity }}</small>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Stock
-                                                            Mínimo</label>
-                                                        <InputNumber v-model="form.min_stock" class="w-full" :min="0"
-                                                            showButtons />
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="field">
-                                                        <label class="block text-sm font-medium mb-2">Stock
-                                                            Máximo</label>
-                                                        <InputNumber v-model="form.max_stock" class="w-full" :min="0"
-                                                            showButtons />
-                                                    </div>
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Preço *</label>
+                                                    <InputNumber v-model="form.price" mode="currency" currency="MZN"
+                                                        locale="pt-MZ" class="w-full"
+                                                        :class="{ 'p-invalid': errors.price }" />
+                                                    <small class="p-error" v-if="errors.price">{{ errors.price
+                                                    }}</small>
                                                 </div>
                                             </div>
-                                        </FormGroup>
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Preço de Custo
+                                                        *</label>
+                                                    <InputNumber v-model="form.cost_price" mode="currency"
+                                                        currency="MZN" locale="pt-MZ" class="w-full"
+                                                        :class="{ 'p-invalid': errors.cost_price }" />
+                                                    <small class="p-error" v-if="errors.cost_price">{{ errors.cost_price
+                                                    }}</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Quantidade em Stock
+                                                        *</label>
+                                                    <InputNumber v-model="form.stock_quantity" class="w-full"
+                                                        :class="{ 'p-invalid': errors.stock_quantity }" :min="0"
+                                                        showButtons buttonLayout="horizontal"
+                                                        incrementButtonIcon="pi pi-plus"
+                                                        decrementButtonIcon="pi pi-minus" :step="1" />
+                                                    <small class="p-error" v-if="errors.stock_quantity">{{
+                                                        errors.stock_quantity }}</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Stock Mínimo</label>
+                                                    <InputNumber v-model="form.min_stock" class="w-full" :min="0"
+                                                        showButtons />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="field">
+                                                    <label class="block text-sm font-medium mb-2">Stock Máximo</label>
+                                                    <InputNumber v-model="form.max_stock" class="w-full" :min="0"
+                                                        showButtons />
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div class="d-flex p-4 p-md-6 border-top gap-2">
@@ -355,16 +351,16 @@
                                     <div class="p-4 p-md-6 space-y-4">
 
                                         <div class="row g-3">
-                                            <div class="col-12 col-md-6">
+
+                                            <div class="col-md-4">
                                                 <div class="field">
-                                                    <label class="block text-sm font-medium mb-2">Data de
-                                                        Validade</label>
-                                                    <Calendar v-model="form.expiry_date" dateFormat="dd/mm/yy"
-                                                        class="w-full" />
+                                                    <label class="block text-sm font-medium mb-2">Concentração</label>
+                                                    <InputText v-model="form.strength"
+                                                        placeholder="Ex: 500mg, 10mg/ml, etc." class="w-full" />
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="field">
                                                     <label class="block text-sm font-medium mb-2">Número do Lote</label>
                                                     <InputText v-model="form.batch_number" placeholder="Número do lote"
@@ -372,7 +368,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="field">
                                                     <label class="block text-sm font-medium mb-2">Forma
                                                         Farmacêutica</label>
@@ -380,30 +376,27 @@
                                                         placeholder="Ex: Comprimido, Xarope, etc." class="w-full" />
                                                 </div>
                                             </div>
-
-                                            <div class="col-12 col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="field">
-                                                    <label class="block text-sm font-medium mb-2">Concentração</label>
-                                                    <InputText v-model="form.strength"
-                                                        placeholder="Ex: 500mg, 10mg/ml, etc." class="w-full" />
+                                                    <label class="block text-sm font-medium mb-2">Data de
+                                                        Validade</label>
+                                                    <Calendar v-model="form.expiry_date" dateFormat="dd/mm/yy"
+                                                        class="w-full" />
+                                                </div>
+                                            </div>
+                                            <div class="d-flex flex-wrap gap-4 mt-4">
+                                                <div class="field-checkbox">
+                                                    <Checkbox v-model="form.requires_prescription"
+                                                        inputId="requires_prescription_create" :binary="true" />
+                                                    <label for="requires_prescription_create" class="ml-2">
+                                                        Requer Prescrição Médica
+                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex flex-wrap gap-4 mt-4">
-                                            <div class="field-checkbox">
-                                                <Checkbox v-model="form.requires_prescription"
-                                                    inputId="requires_prescription_create" :binary="true" />
-                                                <label for="requires_prescription_create" class="ml-2">Requer
-                                                    Prescrição Médica</label>
-                                            </div>
 
-                                            <div class="field-checkbox">
-                                                <Checkbox v-model="form.is_active" inputId="is_active_create"
-                                                    :binary="true" :modelValue="true" />
-                                                <label for="is_active_create" class="ml-2">Ativo</label>
-                                            </div>
-                                        </div>
+
                                     </div>
 
                                     <div class="d-flex p-4 p-md-6 border-top gap-2">
@@ -506,16 +499,12 @@
                                 Cancelar
                             </button>
 
-                            <button
-    v-if="isEdit"
-    type="button"
-    class="btn btn-primary px-3 d-flex align-items-center gap-2"
-    :disabled="loading"
-    @click="submitForm"
->
-    <i class="pi pi-check"></i>
-    <span>Actualizar</span>
-</button>
+                            <button v-if="isEdit" type="button"
+                                class="btn btn-primary px-3 d-flex align-items-center gap-2" :disabled="loading"
+                                @click="submitForm">
+                                <i class="pi pi-check"></i>
+                                <span>Actualizar</span>
+                            </button>
 
                         </div>
                     </div>
@@ -530,7 +519,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { router, useForm } from '@inertiajs/vue3'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
-
+import axios from 'axios';
 // PrimeVue Components
 import Toast from 'primevue/toast'
 import Button from 'primevue/button'
@@ -654,6 +643,7 @@ const submitForm = () => {
     }
 }
 
+
 const onFileChange = (event) => {
     file.value = event.target.files[0]
 }
@@ -677,58 +667,72 @@ const handleDrop = (event) => {
 }
 
 const submitImport = async () => {
-    if (!file.value) return
+    if (!file.value) return;
 
-    loading.value = true
+    loading.value = true;
 
-    const formData = new FormData()
-    formData.append('file', file.value)
+    const formData = new FormData();
+    formData.append('file', file.value);
 
     try {
-        const response = await axios.post(route('medicines.importExcel'), formData, {
+        const response = await axios.post(route('medicines.import'), formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
+                'Content-Type': 'multipart/form-data',
+                'X-Requested-With': 'XMLHttpRequest', // bom para Laravel
+            },
+        });
 
+        // Atualiza o resumo da importação
         importSummary.value = {
-            inserted: response.data.inserted,
-            failed: response.data.failed,
-            total: response.data.inserted + response.data.failed,
-            errors: response.data.errors
-        }
+            inserted: response.data.inserted || 0,
+            failed: response.data.failed || 0,
+            total: (response.data.inserted || 0) + (response.data.failed || 0),
+            errors: response.data.errors || [],
+        };
 
-        if (response.data.failed === 0) {
+        // Limpa o arquivo após importação
+        file.value = null;
+
+        // Mensagens no toast
+        if (importSummary.value.failed === 0) {
             toast.value.add({
                 severity: 'success',
                 summary: 'Sucesso',
-                detail: `${response.data.inserted} medicamentos importados com sucesso!`,
-                life: 5000
-            })
+                detail: `${importSummary.value.inserted} medicamentos importados com sucesso!`,
+                life: 5000,
+            });
 
             // Redirecionar após 2 segundos
             setTimeout(() => {
-                router.get(route('medicines.index'))
-            }, 2000)
+                router.get(route('medicines.index'));
+            }, 2000);
         } else {
             toast.value.add({
                 severity: 'warn',
                 summary: 'Importação Parcial',
-                detail: `${response.data.inserted} importados, ${response.data.failed} falhas.`,
-                life: 5000
-            })
+                detail: `${importSummary.value.inserted} importados, ${importSummary.value.failed} falhas.`,
+                life: 5000,
+            });
         }
     } catch (error) {
+        console.error('Erro ao importar arquivo:', error);
+
+        // Tenta extrair mensagem do Laravel se existir
+        const message =
+            error.response?.data?.message ||
+            error.response?.data?.errors?.file?.[0] ||
+            'Erro ao importar arquivo!';
+
         toast.value.add({
             severity: 'error',
             summary: 'Erro',
-            detail: 'Erro ao importar arquivo!',
-            life: 3000
-        })
+            detail: message,
+            life: 5000,
+        });
     } finally {
-        loading.value = false
+        loading.value = false;
     }
-}
+};
 
 const downloadTemplate = () => {
     window.open(route('medicines.template'), '_blank')
@@ -757,6 +761,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.p-error {
+    color: red;
+}
+
 .card {
     max-width: 1200px;
     margin: auto;

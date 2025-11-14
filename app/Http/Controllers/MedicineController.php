@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Category;
 use App\Models\Medicine;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -51,48 +52,48 @@ class MedicineController extends Controller
     /**
      * Mostrar formulário de criação
      */
-   // Controlador: MedicineController.php
+    // Controlador: MedicineController.php
 
-public function create()
-{
-    $categories = Category::all();
-    $suppliers = Supplier::all();
+    public function create()
+    {
+        $categories = Category::all();
+        $suppliers = Supplier::all();
 
-    return Inertia::render('Dashboard/Medicine/Create', [
-        'categories' => $categories,
-        'suppliers' => $suppliers,
-        'isEdit' => false,
-        'isView' => false,
-    ]);
-}
+        return Inertia::render('Dashboard/Medicine/Create', [
+            'categories' => $categories,
+            'suppliers' => $suppliers,
+            'isEdit' => false,
+            'isView' => false,
+        ]);
+    }
 
-public function edit($uuid)
-{
-    $medicine = Medicine::with(['category', 'supplier'])->where('uuid', $uuid)->firstOrFail();
-    $categories = Category::all();
-    $suppliers = Supplier::all();
+    public function edit($uuid)
+    {
+        $medicine = Medicine::with(['category', 'supplier'])->where('uuid', $uuid)->firstOrFail();
+        $categories = Category::all();
+        $suppliers = Supplier::all();
 
-    return Inertia::render('Dashboard/Medicine/Create', [
-        'medicine' => $medicine,
-        'categories' => $categories,
-        'suppliers' => $suppliers,
-        'isEdit' => true,
-        'isView' => false,
-    ]);
-}
+        return Inertia::render('Dashboard/Medicine/Create', [
+            'medicine' => $medicine,
+            'categories' => $categories,
+            'suppliers' => $suppliers,
+            'isEdit' => true,
+            'isView' => false,
+        ]);
+    }
 
-public function show($uuid)
-{
-    $medicine = Medicine::with(['category', 'supplier'])->where('uuid', $uuid)->firstOrFail();
+    public function show($uuid)
+    {
+        $medicine = Medicine::with(['category', 'supplier'])->where('uuid', $uuid)->firstOrFail();
 
-    return Inertia::render('Dashboard/Medicine/Create', [
-        'medicine' => $medicine,
-        'categories' => Category::all(),
-        'suppliers' => Supplier::all(),
-        'isEdit' => false,
-        'isView' => true,
-    ]);
-}
+        return Inertia::render('Dashboard/Medicine/Create', [
+            'medicine' => $medicine,
+            'categories' => Category::all(),
+            'suppliers' => Supplier::all(),
+            'isEdit' => false,
+            'isView' => true,
+        ]);
+    }
 
 
     /**
@@ -150,40 +151,8 @@ public function show($uuid)
             'supplier_id.exists' => 'O fornecedor selecionado não existe.',
         ]);
 
-        // Processar imagens
-        if ($request->hasFile('images')) {
-            $imagePaths = [];
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('medicines/images', 'public');
-                $imagePaths[] = $path;
-            }
-            $validated['images'] = $imagePaths;
-        }
 
-        // Processar anexos
-        if ($request->has('attachments')) {
-            $attachmentData = [];
-            foreach ($request->attachments as $attachment) {
-                if (isset($attachment['file']) && $attachment['file']) {
-                    $path = $attachment['file']->store('medicines/attachments', 'public');
-                    $attachmentData[] = [
-                        'name' => $attachment['name'],
-                        'file_path' => $path,
-                        'file_name' => $attachment['file']->getClientOriginalName(),
-                    ];
-                }
-            }
-            $validated['attachments_data'] = $attachmentData;
-        }
-
-        $medicine = Medicine::create($validated);
-
-        // Salvar anexos se existirem
-        if (isset($validated['attachments_data'])) {
-            foreach ($validated['attachments_data'] as $attachment) {
-                $medicine->attachments()->create($attachment);
-            }
-        }
+        Medicine::create($validated);
 
         return redirect()->route('medicines.index')->with('success', 'Medicamento criado com sucesso.');
     }
@@ -200,7 +169,7 @@ public function show($uuid)
             'generic_name' => 'nullable|string|max:255',
             'brand' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'sku' => 'required|string|max:255|unique:medicines,sku,'.$medicine->id,
+            'sku' => 'required|string|max:255|unique:medicines,sku,' . $medicine->id,
             'price' => 'required|numeric|min:0',
             'cost_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
@@ -244,7 +213,7 @@ public function show($uuid)
 
         $medicine->update($validated);
 
-        return redirect()->route('medicines.index')->with('success', 'Medicamento atualizado com sucesso.');
+        return redirect()->route('medicines.index')->with('success', 'Medicamento actualizado com sucesso.');
     }
 
     /**
@@ -292,6 +261,15 @@ public function show($uuid)
         return redirect()->route('medicines.index')->with('success', 'Medicamento eliminado com sucesso.');
     }
 
+    public function addImage($uuid)
+    {
+        $medicine = Medicine::with('attachments')->where('uuid', $uuid)->firstOrFail();
+
+        return Inertia::render('Dashboard/Medicine/AddImage', [
+            'medicine' => $medicine,
+        ]);
+    }
+
     /**
      * Restaurar medicamento deletado
      */
@@ -332,8 +310,10 @@ public function show($uuid)
     public function importExcel(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls|max:10240', // 10MB max
+            'file' => 'required|mimes:xlsx,xls|max:10240',
         ]);
+
+        Log::info('Iniciando importação de medicamentos via Excel.');
 
         $file = $request->file('file');
         $spreadsheet = IOFactory::load($file->getRealPath());
@@ -348,7 +328,7 @@ public function show($uuid)
             try {
                 // Validar dados básicos
                 if (empty($row['A']) || empty($row['D'])) {
-                    $errors[] = 'Linha '.($index + 2).': Nome e SKU são obrigatórios';
+                    $errors[] = 'Linha ' . ($index + 2) . ': Nome e SKU são obrigatórios';
                     $failed++;
 
                     continue;
@@ -367,7 +347,7 @@ public function show($uuid)
                 ]);
                 $inserted++;
             } catch (\Throwable $e) {
-                $errors[] = 'Linha '.($index + 2).': '.$e->getMessage();
+                $errors[] = 'Linha ' . ($index + 2) . ': ' . $e->getMessage();
                 $failed++;
             }
         }
@@ -414,7 +394,7 @@ public function show($uuid)
         $categories = Category::where('is_active', true)->get();
         $sheet->setCellValue('J1', 'Categorias Disponíveis');
         foreach ($categories as $index => $category) {
-            $sheet->setCellValue('J'.($index + 2), $category->id.' - '.$category->name);
+            $sheet->setCellValue('J' . ($index + 2), $category->id . ' - ' . $category->name);
         }
 
         $sheet->getStyle('A1:I1')->getFont()->setBold(true);

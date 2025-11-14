@@ -56,10 +56,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/restore/{uuid}', 'restore')->name('restore');
         Route::post('/toggle/{uuid}', 'toggle')->name('toggle');
         Route::post('/bulk-delete', 'bulkDelete')->name('bulkDelete');
-        Route::post('/import-excel', 'importExcel')->name('importExcel');
         Route::get('/template', 'template')->name('template');
         // Rotas para remover anexos e imagens
         Route::delete('/{uuid}/attachments/{attachmentId}', 'removeAttachment')->name('removeAttachment');
+        Route::post('/import-excel', 'importExcel')->name('import');
         Route::delete('/{uuid}/images/{imageIndex}', 'removeImage')->name('removeImage');
     });
 });

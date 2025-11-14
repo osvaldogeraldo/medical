@@ -346,6 +346,8 @@ const onFileChange = (e) => {
 const handleDrop = (e) => {
     file.value = e.dataTransfer.files[0];
 };
+
+
 const enviarArquivo = async () => {
     if (!file.value) return;
     carregando.value = true;
